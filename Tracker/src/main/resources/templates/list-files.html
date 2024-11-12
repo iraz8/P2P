@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>File List</title>
+</head>
+<body>
+<h1>Uploaded Files</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Filename</th>
+        <th>Filesize</th>
+        <th>File Format</th>
+        <th>Client Host</th>
+        <th>Client Port</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="file : ${files}">
+        <td th:text="${file['filename']}">Filename</td>
+        <td th:text="${file['filesize']}">Filesize</td>
+        <td th:text="${file['fileformat']}">File Format</td>
+        <td th:text="${file['clientHost']}">Client Host</td>
+        <td th:text="${file['clientPort']}">Client Port</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

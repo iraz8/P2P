@@ -1,19 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <title>File Upload</title>
+    <title>Upload File Metadata</title>
 </head>
 <body>
-<h1>Upload a New File</h1>
+<h1>Upload File Metadata</h1>
 
-<form th:action="@{/new-file-metadata/upload}" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" />
+<form action="/new-file-metadata/upload" method="post" enctype="multipart/form-data">
+    <label for="file">Choose file to upload:</label>
+    <input type="file" id="file" name="file" required>
     <button type="submit">Upload</button>
 </form>
 
-<p th:if="${message}" th:text="${message}"></p>
-
-<h2>File Details:</h2>
-<pre th:if="${fileDetails}" th:text="${fileDetails}">No file details available</pre>
 </body>
 </html>
