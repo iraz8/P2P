@@ -17,7 +17,7 @@
     </thead>
     <tbody>
     <tr th:each="file : ${files}">
-        <td th:text="${file['filename']}">Filename</td>
+        <td><a th:href="@{/tracker/file-download(filename=${file['filename']})}" th:text="${file['filename']}"></a></td>
         <td th:text="${file['filesize']}">Filesize</td>
         <td th:text="${file['fileformat']}">File Format</td>
         <td th:text="${file['clientHost']}">Client Host</td>
