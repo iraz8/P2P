@@ -9,6 +9,7 @@
     <thead>
     <tr>
         <th>Filename</th>
+        <th>Metadata</th>
         <th>Filesize</th>
         <th>File Format</th>
         <th>Client Host</th>
@@ -17,7 +18,8 @@
     </thead>
     <tbody>
     <tr th:each="file : ${files}">
-        <td><a th:href="@{/tracker/file-download(filename=${file['filename']})}" th:text="${file['filename']}"></a></td>
+        <td><a th:href="@{/file-download(filename=${file['filename']})}" th:text="${file['filename']}"></a></td>
+        <td><a th:href="@{/file-download(filename=${file['filename']})}">Download metadata</a></td>
         <td th:text="${file['filesize']}">Filesize</td>
         <td th:text="${file['fileformat']}">File Format</td>
         <td th:text="${file['clientHost']}">Client Host</td>

@@ -28,7 +28,7 @@ public class UploadFileMetadataService {
                                      @Value("${tracker.host}") String trackerHost,
                                      @Value("${tracker.port}") String trackerPort) {
         this.clientPort = clientPort;
-        this.trackerUrl = "http://" + trackerHost + ":" + trackerPort + "/tracker/uploadFile";
+        this.trackerUrl = "http://" + trackerHost + ":" + trackerPort + "/uploadFile";
         logger.info("Tracker URL set to: {}", this.trackerUrl);
     }
 
