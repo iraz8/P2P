@@ -1,9 +1,13 @@
 package com.razvan.tracker.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
-@Table(name = "downloadedFiles", uniqueConstraints = @UniqueConstraint(columnNames = {"filename", "downloadedBy"}))
+@Table(name = "downloadedFiles", uniqueConstraints = @UniqueConstraint(columnNames = {"filename", "downloadedBy", "clientPort"}))
 public class DownloadedFiles {
 
     @Id
@@ -11,30 +15,7 @@ public class DownloadedFiles {
     private Long id;
 
     private String filename;
-    private String downloadedBy;
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public String getDownloadedBy() {
-        return downloadedBy;
-    }
-
-    public void setDownloadedBy(String downloadedBy) {
-        this.downloadedBy = downloadedBy;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    private String downloadedBy; // Client IP
+    private Integer clientPort;  // Client port
+    private Integer numberOfChunks;
 }

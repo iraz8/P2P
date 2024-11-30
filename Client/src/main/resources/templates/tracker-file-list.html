@@ -1,0 +1,12 @@
+<table>
+    <thead>
+    <tr>
+        <th>File Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="file : ${files}">
+        <td th:text="${file}"></td>
+    </tr>
+    </tbody>
+</table>

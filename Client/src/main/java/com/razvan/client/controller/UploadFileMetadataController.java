@@ -33,9 +33,14 @@ public class UploadFileMetadataController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, Model model) throws IOException {
-        String message = uploadFileMetadataService.uploadFileToTracker(file);
-        model.addAttribute("message", message);
+    public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
+        try {
+            String message = uploadFileMetadataService.uploadFileToTracker(file);
+            String filePath = uploadFileMetadataService.saveFileToClientStorage(file);
+            model.addAttribute("message", "File uploaded successfully to: " + message + "File saved in clientStorage folder: " + filePath);
+        } catch (IOException e) {
+            model.addAttribute("message", "File upload failed: " + e.getMessage());
+        }
         return "metadata-upload-success";
     }
 }

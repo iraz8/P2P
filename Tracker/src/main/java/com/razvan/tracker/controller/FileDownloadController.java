@@ -1,14 +1,16 @@
 package com.razvan.tracker.controller;
 
 import com.razvan.tracker.service.FileDownloadService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import static com.razvan.tracker.service.FileUploadService.METADATA_EXTENSION;
 
 @Controller
 public class FileDownloadController {
@@ -35,7 +37,7 @@ public class FileDownloadController {
         }
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + METADATA_EXTENSION + "\"")
                 .body(resource);
     }
 }

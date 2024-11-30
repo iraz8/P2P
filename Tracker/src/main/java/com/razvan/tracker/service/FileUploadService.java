@@ -14,6 +14,7 @@ import java.util.Map;
 public class FileUploadService {
 
     public static final String METADATA_DIR = "data/file-metadata";
+    public static final String METADATA_EXTENSION = ".file-metadata";
 
     public String saveFileMetadata(MultipartFile file, String clientHost, int clientPort) {
         File metadataDir = new File(METADATA_DIR);
@@ -28,7 +29,7 @@ public class FileUploadService {
         metadata.put("clientHost", clientHost);
         metadata.put("clientPort", clientPort);
 
-        String metadataFilePath = METADATA_DIR + File.separator + file.getOriginalFilename() + ".file-metadata";
+        String metadataFilePath = METADATA_DIR + File.separator + file.getOriginalFilename() + METADATA_EXTENSION;
 
         try (FileWriter writer = new FileWriter(metadataFilePath)) {
             writer.write(new ObjectMapper().writeValueAsString(metadata));
