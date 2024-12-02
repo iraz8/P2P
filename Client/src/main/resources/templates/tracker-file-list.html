@@ -1,12 +1,42 @@
-<table>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tracker File List</title>
+    <style>
+        table {
+            width: 50%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+<h1>File List from Tracker</h1>
+<table border="1">
     <thead>
     <tr>
         <th>File Name</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="file : ${files}">
         <td th:text="${file}"></td>
+        <td>
+            <a th:href="@{/download-file(fileName=${file})}">Download</a>
+        </td>
     </tr>
     </tbody>
 </table>
+</body>
+</html>
