@@ -1,5 +1,6 @@
 package com.razvan.client.controller;
 
+import com.razvan.client.model.FileMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,7 @@ public class TrackerFileListController {
     @GetMapping("/tracker-file-list")
     public String getTrackerFileList(Model model) {
         String trackerUrl = String.format("http://%s:%s/api/list-files", trackerHost, trackerPort);
-        List<?> files = restTemplate.getForObject(trackerUrl, List.class);
+        List<FileMetadata> files = restTemplate.getForObject(trackerUrl, List.class);
         model.addAttribute("files", files);
         return "tracker-file-list";
     }

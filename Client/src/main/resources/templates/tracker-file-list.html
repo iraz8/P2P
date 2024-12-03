@@ -31,12 +31,34 @@
     </thead>
     <tbody>
     <tr th:each="file : ${files}">
-        <td th:text="${file}"></td>
+        <td th:text="${file.filename}"></td>
         <td>
-            <a th:href="@{/download-file(fileName=${file})}">Download</a>
+            <a th:href="@{/download-file(fileName=${file.filename})}"
+               th:attr="data-file-name=${file.filename}"
+               onclick="sendTrackerData(this)">Download</a>
         </td>
     </tr>
     </tbody>
 </table>
 </body>
 </html>
+<script>
+    function sendTrackerData(element) {
+        const fileName = element.getAttribute('data-file-name');
+        const clientIP = location.hostname;
+        const clientPort = location.port;
+
+        fetch('/tracker/save-download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fileName: fileName,
+                clientIP: clientIP,
+                clientPort: clientPort
+            })
+        });
+    }
+
+</script>
