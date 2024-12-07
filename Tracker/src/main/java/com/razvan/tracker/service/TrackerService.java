@@ -1,6 +1,8 @@
 package com.razvan.tracker.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.razvan.tracker.model.TrackerEntity;
 import com.razvan.tracker.model.TrackerRequest;
@@ -43,7 +45,20 @@ public class TrackerService {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 ObjectNode metadataJson = (ObjectNode) objectMapper.readTree(Files.newInputStream(metadataPath));
-                metadataJson.withArray("downloadedBy").add(trackerRequest.getClientIP() + ":" + trackerRequest.getClientPort());
+                ArrayNode downloadedByArray = metadataJson.withArray("downloadedBy");
+                String newEntry = trackerRequest.getClientIP() + ":" + trackerRequest.getClientPort();
+
+                boolean entryExists = false;
+                for (JsonNode node : downloadedByArray) {
+                    if (node.asText().equals(newEntry)) {
+                        entryExists = true;
+                        break;
+                    }
+                }
+
+                if (!entryExists) {
+                    downloadedByArray.add(newEntry);
+                }
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(Files.newOutputStream(metadataPath), metadataJson);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -92,7 +92,7 @@ public class UploadFileMetadataService {
         }
     }
 
-    private String getFileNameWithoutExtension(String fileName) {
+    public static String getFileNameWithoutExtension(String fileName) {
         return fileName != null ? fileName.replaceFirst("[.][^.]+$", "") : "unknown_file";
     }
 

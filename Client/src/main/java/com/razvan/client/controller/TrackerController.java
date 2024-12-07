@@ -1,6 +1,8 @@
 package com.razvan.client.controller;
 
 import com.razvan.client.model.TrackerRequest;
+import com.razvan.client.service.DownloadFileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,13 +17,17 @@ public class TrackerController {
     private final String trackerHost;
     private final String trackerPort;
     private final RestTemplate restTemplate;
+    private final DownloadFileService downloadFileService;
 
+    @Autowired
     public TrackerController(
             @Value("${tracker.host}") String trackerHost,
-            @Value("${tracker.port}") String trackerPort) {
+            @Value("${tracker.port}") String trackerPort,
+            DownloadFileService downloadFileService) {
         this.trackerHost = trackerHost;
         this.trackerPort = trackerPort;
         this.restTemplate = new RestTemplate();
+        this.downloadFileService = downloadFileService;
     }
 
     @PostMapping("/save-download")
@@ -33,12 +39,10 @@ public class TrackerController {
 
     @GetMapping("/download-metadata/{filename}")
     public ResponseEntity<byte[]> downloadMetadata(@PathVariable String filename) {
-        RestTemplate restTemplate = new RestTemplate();
-        String trackerServiceUrl = "http://" + trackerHost + ":" + trackerPort + "/file-metadata/" + filename;
-        ResponseEntity<byte[]> response = restTemplate.getForEntity(trackerServiceUrl, byte[].class);
+        ResponseEntity<byte[]> response = downloadFileService.fetchFileMetadata(filename);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "-metadata.json\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + ".file-metadata\"")
                 .body(response.getBody());
     }
 
