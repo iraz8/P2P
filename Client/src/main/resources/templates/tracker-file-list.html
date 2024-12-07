@@ -26,7 +26,8 @@
     <thead>
     <tr>
         <th>File Name</th>
-        <th>Actions</th>
+        <th>Download file</th>
+        <th>Metadata</th>
     </tr>
     </thead>
     <tbody>
@@ -36,6 +37,9 @@
             <a th:href="@{/download-file(fileName=${file.filename})}"
                th:attr="data-file-name=${file.filename}"
                onclick="sendTrackerData(this)">Download</a>
+        </td>
+        <td>
+            <a th:href="@{'/tracker/download-metadata/' + ${file.filename}}">Download metadata</a>
         </td>
     </tr>
     </tbody>

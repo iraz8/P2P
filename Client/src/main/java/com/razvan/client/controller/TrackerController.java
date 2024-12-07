@@ -2,11 +2,10 @@ package com.razvan.client.controller;
 
 import com.razvan.client.model.TrackerRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
@@ -31,4 +30,16 @@ public class TrackerController {
         restTemplate.postForObject(trackerServiceUrl, trackerRequest, Void.class);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/download-metadata/{filename}")
+    public ResponseEntity<byte[]> downloadMetadata(@PathVariable String filename) {
+        RestTemplate restTemplate = new RestTemplate();
+        String trackerServiceUrl = "http://" + trackerHost + ":" + trackerPort + "/file-metadata/" + filename;
+        ResponseEntity<byte[]> response = restTemplate.getForEntity(trackerServiceUrl, byte[].class);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "-metadata.json\"")
+                .body(response.getBody());
+    }
+
 }

@@ -6,9 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class FileDownloadService {
@@ -43,4 +49,17 @@ public class FileDownloadService {
 
         return new FileSystemResource(file);
     }
+
+    public Resource getMetadataForFile(String filename) throws FileNotFoundException {
+        Path metadataPath = Paths.get(metadataFileDirectory).resolve(filename + "." + metadataFileExtension);
+        if (!Files.exists(metadataPath)) {
+            throw new FileNotFoundException("Metadata file not found for: " + filename);
+        }
+        try {
+            return new UrlResource(metadataPath.toUri());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error retrieving metadata file", e);
+        }
+    }
+
 }
