@@ -21,6 +21,7 @@ public class TrackerController {
     @PostMapping("/save-download")
     public ResponseEntity<Void> saveDownload(@RequestBody TrackerRequest trackerRequest) {
         trackerService.saveDownload(trackerRequest);
+        trackerService.updateMetadataFile(trackerRequest);
         return ResponseEntity.ok().build();
     }
 }

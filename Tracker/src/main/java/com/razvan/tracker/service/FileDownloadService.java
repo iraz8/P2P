@@ -3,6 +3,7 @@ package com.razvan.tracker.service;
 import com.razvan.tracker.model.DownloadedFiles;
 import com.razvan.tracker.repository.DownloadedFilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -11,18 +12,22 @@ import java.io.File;
 
 @Service
 public class FileDownloadService {
-    private static final String METADATA_EXTENSION = ".file-metadata";
-    private static final String FILE_DIRECTORY = "data/file-metadata/";
+    private final String metadataFileDirectory;
+    private final String metadataFileExtension;
 
     private final DownloadedFilesRepository downloadedFilesRepository;
 
     @Autowired
-    public FileDownloadService(DownloadedFilesRepository downloadedFilesRepository) {
+    public FileDownloadService(DownloadedFilesRepository downloadedFilesRepository,
+                               @Value("${metadata.file.directory}") String metadataFileDirectory,
+                               @Value("${metadata.file.extension}") String metadataFileExtension) {
         this.downloadedFilesRepository = downloadedFilesRepository;
+        this.metadataFileDirectory = metadataFileDirectory;
+        this.metadataFileExtension = metadataFileExtension;
     }
 
     public Resource getFileResource(String filename, String clientIp, int clientPort) {
-        File file = new File(FILE_DIRECTORY + File.separator + filename + METADATA_EXTENSION);
+        File file = new File(metadataFileDirectory + File.separator + filename + "." + metadataFileExtension);
         if (!file.exists()) {
             return null;
         }
