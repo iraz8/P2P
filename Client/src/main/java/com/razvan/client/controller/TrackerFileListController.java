@@ -1,11 +1,13 @@
 package com.razvan.client.controller;
 
+import com.razvan.client.exception.NoSeedersException;
 import com.razvan.client.model.FileMetadata;
 import com.razvan.client.service.DownloadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -47,7 +49,19 @@ public class TrackerFileListController {
 
         downloadFileService.downloadChunks(fileName);
 
-        return "file-clients";
+        return "redirect:/download-complete";
+    }
+
+    @ExceptionHandler(NoSeedersException.class)
+    public String handleNoSeedersException(NoSeedersException ex, Model model) {
+        model.addAttribute("message", "There are no seeders");
+        return "no-seeders";
+    }
+
+    @GetMapping("/download-complete")
+    public String showDownloadCompletePage(Model model) {
+        model.addAttribute("message", "Completed download");
+        return "download-complete";
     }
 
 }
