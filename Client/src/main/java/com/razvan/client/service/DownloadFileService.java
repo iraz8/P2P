@@ -1,7 +1,7 @@
 package com.razvan.client.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.razvan.client.controller.DownloadFileController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,7 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -54,10 +58,11 @@ public class DownloadFileService {
 
 
     public void downloadChunks(String filename) {
+        String clientStoragePath = new File("").getAbsolutePath() + File.separator + "clientStorage";
         Map<String, Object> metadata = extractFileMetadata(fetchFileMetadata(filename));
         Integer filesize = (Integer) metadata.get("filesize");
-        Integer numberOfChunks = filesize / chunkSize;
-        List<String> downloadedBy = (List<String>) metadata.get("downloadedBy");
+        int numberOfChunks = filesize / chunkSize;
+        List<String> downloadedBy = ((List<String>) metadata.get("downloadedBy")).stream().filter(ip -> !ip.equals(clientHost + ":" + clientPort)).toList();
 
         for (int chunk = 0; chunk < numberOfChunks; chunk++) {
             String baseUrl = "http://" + downloadedBy.get(chunk % downloadedBy.size());
@@ -70,10 +75,9 @@ public class DownloadFileService {
                 ResponseEntity<byte[]> response = restTemplate.exchange(endpoint, HttpMethod.GET, requestEntity, byte[].class);
 
                 if (response.getStatusCode().is2xxSuccessful()) {
-                    byte[] chunkData = response.getBody();
-                    System.out.println("Successfully downloaded chunk " + chunk);
-                } else {
-                    System.out.println("Failed to download chunk " + chunk + ". Status code: " + response.getStatusCode());
+                    Path storagePath = Paths.get(clientStoragePath, DownloadFileController.getLocalIpAddress() + "_" + clientPort + "_" + UploadFileMetadataService.getFileNameWithoutExtension(filename) + File.separator + filename + ".part" + chunk);
+                    Files.createDirectories(storagePath.getParent());
+                    Files.write(storagePath, response.getBody());
                 }
             } catch (Exception e) {
                 System.err.println("Error while downloading chunk " + chunk + ": " + e.getMessage());
